@@ -1,13 +1,18 @@
 package online.shopre.product.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Entity
+@Table(name = "products")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
@@ -31,6 +36,7 @@ public class Product {
     private Boolean isFeatured;
 
     private LocalDateTime createdAt;
+
     protected void onCreate(){
 
     }

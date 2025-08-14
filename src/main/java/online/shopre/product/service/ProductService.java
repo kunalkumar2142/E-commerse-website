@@ -2,7 +2,6 @@ package online.shopre.product.service;
 
 import online.shopre.product.model.Product;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
