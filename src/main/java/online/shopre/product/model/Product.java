@@ -37,8 +37,10 @@ public class Product {
 
     private LocalDateTime createdAt;
 
+    @PrePersist
     protected void onCreate(){
-
+        System.out.println("Hello, i am pring my name.");
+        this.createdAt = LocalDateTime.now();
     }
 
 }
