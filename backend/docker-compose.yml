@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+
+  shopre-product-service:
+    image: kunal2142/shopre-product-service
+    container_name: shopre-product-service
+    depends_on:
+      - shopre-product-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://shopre-product-db:5432/shopre-product-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  shopre-product-db:
+    image: postgres:16-alpine
+    container_name: shopre-product-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shopre-product-db
+    ports:
+      - "5440:5432"
+    volumes:
+      - shopre-product-db-data:/var/lib/postgresql/data
+
+volumes:
+  shopre-product-db-data:
