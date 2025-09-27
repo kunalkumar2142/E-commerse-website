@@ -1,13 +1,33 @@
 package online.shopre.user_authentication.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
-public class User implements UserDetails {
-    @Override
+@Data
+@Entity
+public class User extends UserDetails {
+
+    @Id
+    @GetMapping(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(nullable = false)
+    private String name;
+
+    private int phoneno;
+
+    private String email;
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
