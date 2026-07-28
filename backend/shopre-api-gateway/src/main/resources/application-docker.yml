@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allowedOrigins:
+              - ${FRONTEND_URL:http://localhost:5173}
+
+application:
+  security:
+    jwt:
+      expiration: 86400000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://shopre-service-discovery:8761/eureka/

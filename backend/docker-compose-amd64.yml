@@ -1,14 +1,16 @@
+# Dev/debug compose: exposes all service and DB ports, builds for linux/amd64.
+# Uses the same .env as docker-compose.yml.
+
 services:
-  # ---------- Service Discovery (Eureka) ----------
   shopre-service-discovery:
     build:
       context: ./service-discovery
     image: kunal2142/service-discovery
+    platform: linux/amd64
     container_name: shopre-service-discovery
     restart: unless-stopped
-    # Uncomment ONLY if you want the Eureka dashboard from your laptop:
-    # ports:
-    #   - "8761:8761"
+    ports:
+      - "8761:8761"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health || exit 1"]
       interval: 10s
@@ -18,13 +20,15 @@ services:
     networks:
       - shopre-network
 
-  # ---------- Product Service ----------
   shopre-product-service:
     build:
       context: ./product
     image: kunal2142/shopre-product-service
+    platform: linux/amd64
     container_name: shopre-product-service
     restart: unless-stopped
+    ports:
+      - "8082:8082"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://shopre-product-db:5432/shopre-product-db
@@ -48,9 +52,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       POSTGRES_DB: shopre-product-db
-    # Uncomment for local DB inspection only:
-    # ports:
-    #   - "5440:5432"
+    ports:
+      - "5440:5432"
     volumes:
       - shopre-product-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -61,13 +64,15 @@ services:
     networks:
       - shopre-network
 
-  # ---------- User Authentication Service ----------
   shopre-user-authentication-service:
     build:
       context: ./user-authentication
     image: kunal2142/shopre-user-authentication-service
+    platform: linux/amd64
     container_name: shopre-user-authentication-service
     restart: unless-stopped
+    ports:
+      - "8083:8083"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://shopre-users-db:5432/shopre-users-db
@@ -92,6 +97,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       POSTGRES_DB: shopre-users-db
+    ports:
+      - "5441:5432"
     volumes:
       - shopre-users-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -102,13 +109,15 @@ services:
     networks:
       - shopre-network
 
-  # ---------- Order & Cart Service ----------
   shopre-order-cart-service:
     build:
       context: ./order-and-cart-management
     image: kunal2142/shopre-order-and-cart-management-service
+    platform: linux/amd64
     container_name: shopre-order-cart-service
     restart: unless-stopped
+    ports:
+      - "8084:8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://shopre-cart-db:5432/shopre-cart-db
@@ -134,6 +143,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
       POSTGRES_DB: shopre-cart-db
+    ports:
+      - "5442:5432"
     volumes:
       - shopre-cart-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -144,11 +155,11 @@ services:
     networks:
       - shopre-network
 
-  # ---------- API Gateway (the ONLY publicly exposed service) ----------
   shopre-api-gateway:
     build:
       context: ./shopre-api-gateway
     image: kunal2142/shopre-api-gateway
+    platform: linux/amd64
     container_name: shopre-api-gateway
     restart: unless-stopped
     ports:
